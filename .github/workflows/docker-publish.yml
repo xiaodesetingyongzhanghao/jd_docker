@@ -32,3 +32,4 @@ jobs:
           push: true
           tags: |
             lxk0301/jd_scripts:latest
+            lxk0301/jd_scripts:5.12
