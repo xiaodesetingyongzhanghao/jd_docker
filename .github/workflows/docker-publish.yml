@@ -31,4 +31,4 @@ jobs:
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           push: true
           tags: |
-            lxk0301/jd_scripts:latest
+            lxk0301/jd_scripts:5.12
