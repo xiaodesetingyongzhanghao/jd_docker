@@ -81,6 +81,8 @@ pip3 install --upgrade pip
 pip install docker-compose
 ```
 
+win10用户下载安装[docker desktop](https://www.docker.com/products/docker-desktop)
+
 通过`docker-compose version`查看`docker-compose`版本，确认是否安装成功。
 
 
@@ -106,7 +108,7 @@ jd_scripts
 - - [使用群晖默认配置用这个](./example/jd_scripts.syno.json)
 - - [使用群晖自定义任务追加到默认任务之后用这个](./example/jd_scripts.custom-append.syno.json)
 - - [使用群晖自定义任务覆盖默认任务用这个](./example/jd_scripts.custom-overwrite.syno.json)
-- `jd_scripts/docker-compose.yml`里面的环境变量(`environment:`)配置[参考这里](../githubAction.md#互助码类环境变量)
+- `jd_scripts/docker-compose.yml`里面的环境变量(`environment:`)配置[参考这里](../githubAction.md#互助码类环境变量) 和[本文末尾](../docker/Readme.md#docker专属环境变量)
 
 
 - `jd_scripts/my_crontab_list.sh` 参考内容如下,自己根据需要调整增加删除，不熟悉用户推荐使用[默认配置](./crontab_list.sh)里面的内容：
@@ -219,26 +221,28 @@ jd_scripts
 - 目录文件配置好之后在 `jd_scripts`目录执行。  
  `docker-compose up -d` 启动（修改docker-compose.yml后需要使用此命令使更改生效）；  
  `docker-compose logs` 打印日志；  
- `docker-compose logs -f` 打印日志，-f表示跟随日志；
- `docker logs -f jd_scripts` 和上面两条相比可以显示汉字；
- `docker-compose pull` 更新镜像；  
+ `docker-compose logs -f` 打印日志，-f表示跟随日志；  
+ `docker logs -f jd_scripts` 和上面两条相比可以显示汉字；  
+ `docker-compose pull` 更新镜像；多容器用户推荐使用`docker pull lxk0301/jd_scripts`；  
  `docker-compose stop` 停止容器；  
  `docker-compose restart` 重启容器；  
  `docker-compose down` 停止并删除容器；  
 
 - 你可能会用到的命令
   
-   `docker exec -it jd_scripts /bin/sh -c 'git -C /scripts pull && node /scripts/jd_bean_change.js'`  手动运行一脚本
+   `docker exec -it jd_scripts /bin/sh -c ". /scripts/docker/auto_help.sh export > /scripts/logs/auto_help_export.log && node  /scripts/xxxx.js |ts >> /scripts/logs/xxxx.log 2>&1"`  手动运行一脚本（有自动助力）
+   
+   `docker exec -it jd_scripts /bin/sh -c "node  /scripts/xxxx.js |ts >> /scripts/logs/xxxx.log 2>&1"`  手动运行一脚本（无自动助力）
    
    `docker exec -it jd_scripts /bin/sh -c 'env'`  查看设置的环境变量
    
    `docker exec -it jd_scripts /bin/sh -c 'crontab -l'`  查看已生效的crontab_list定时器任务
    
-   `docker exec -it jd_scripts sh -c "docker_entrypoint.sh"` 手动更新jd_scripts仓库最新脚本
+   `docker exec -it jd_scripts sh -c "git pull"` 手动更新jd_scripts仓库最新脚本（默认已有每天拉取两次的定时任务，不推荐使用）
    
    `docker exec -it jd_scripts /bin/sh` 仅进入容器命令
    
-   `rm -rf  logs/*.log` 删除logs文件夹里面所有的日志文件
+   `rm -rf  logs/*.log` 删除logs文件夹里面所有的日志文件（linux）
 
 - 如果是群晖用户，在docker注册表搜`jd_scripts`，双击下载映像。
 不需要`docker-compose.yml`，只需建个logs/目录，调整`jd_scripts.syno.json`里面对应的配置值，然后导入json配置新建容器。
